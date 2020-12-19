@@ -3,10 +3,10 @@ import java.awt.*;
 public class Izziv4 {
     public static int size = 0;
     public static void main(String[] args) {
-        StdDraw.setCanvasSize(1500, 800);
+        //StdDraw.setCanvasSize(1500, 800);
         size = Integer.parseInt(args[0]);
-        StdDraw.setXscale(-1, size);
-        StdDraw.setYscale((int)(Math.log(size+1)/Math.log(2))+1, -1);
+        //StdDraw.setXscale(-1, size);
+        //StdDraw.setYscale((int)(Math.log(size+1)/Math.log(2))+1, -1);
         int x = (int)(Math.log(size+1)/Math.log(2))+1;
 
         CompleteBinaryTreeDrawer cbtd = new CompleteBinaryTreeDrawer(size);
@@ -37,12 +37,12 @@ class CompleteBinaryTreeDrawer {
         int y2 = taby[(i-1) /2];
 
         //narišem črto
-        StdDraw.line(koorX, koorY, x2, y2);
+        //StdDraw.line(koorX, koorY, x2, y2);
     }
 
     void drawNode(int i) {
-        StdDraw.setPenColor(Color.BLUE);
-        StdDraw.filledCircle(tabx[i], taby[i], 0.2);
+        //StdDraw.setPenColor(Color.BLUE);
+        //StdDraw.filledCircle(tabx[i], taby[i], 0.2);
     }
 
     //slide 104 vaje
