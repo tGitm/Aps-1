@@ -42,8 +42,6 @@ public class izziv6 {
                 zagon = false;
                 break;
         }
-        
-
     }
 }
 
