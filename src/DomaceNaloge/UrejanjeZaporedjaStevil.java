@@ -6,22 +6,26 @@ public class UrejanjeZaporedjaStevil {
     public static void main(String[] args) {
         try {
             Scanner sc = new Scanner(System.in);
-            String read = sc.nextLine();
-            String[] arg = read.split("\\s+");
-            Sorting sort = new Sorting();
-                        
-            //arg[0] - trace/count, arg[1] - sortings, arg[2] - up/down
-            sort.setMode(sc.next());
-
             
-            String[] input = sc.nextLine().split("\\s+"); //številke za sortiranje
-            int[] elements = new int[input.length];
-            for (int i = 0; i < input.length; i++) {
-                elements[i] = Integer.parseInt(input[i]);
-            }
+                        
+            //arg[0] - trace/count, arg[1] - sortings, arg[2] - up/dow
+            String read = sc.nextLine();
+            String[] instructions = read.split("\\s+");
+                
+            String[] nums = sc.nextLine().split("\\s+"); //številke za sortiranje
+            int[] elements = new int[nums.length];
 
-            switch(arg[1]) {
-                case "insert": sort.insertionS(elements);
+            Sorting sorts = new Sorting(elements);
+                
+            
+            for (int i = 0; i < nums.length; i++) {
+                elements[i] = Integer.parseInt(nums[i]);
+            }
+            sorts.setMode(instructions[0]);
+            sorts.setDirection(instructions[2]);
+
+            switch(instructions[1]) {
+                case "insert": sorts.insertionS(elements);
                 break;
                 case "select": 
                 break;
@@ -40,9 +44,11 @@ public class UrejanjeZaporedjaStevil {
                 default: System.out.println("Algoritem ne obstaja, preverite napake");
                 
             }
+            sc.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
     }
 
 }
@@ -50,14 +56,14 @@ public class UrejanjeZaporedjaStevil {
 class Sorting {
     private int modes;
     private int[] arr;
-    private final int START_CAPACITY = 64;
     private int moves;
+    private int last;
     private int compare;
     private int direction; //1 - up, 0 - down
 
 
-    Sorting() {
-        this.arr = new int[START_CAPACITY];
+    Sorting(int[] elements) {   //konstruktorju dodam tabelo elementov
+        this.arr = elements;
         this.modes = modes;
     }
 
@@ -87,17 +93,56 @@ class Sorting {
             this.modes = 1;
     }
 
-    public void setDirection(String dir) {
-        if (dir.equals("up")) 
+    
+    public int getDirection() { return this.direction; }
+
+    public void setDirection(String instruction) {
+        if (instruction.equals("up")) 
             this.direction = 1;
-        else if (dir.equals("down"))
+        else if (instruction.equals("down"))
             this.direction = 0;
 
         //return this.direction;
     }
-
-    public void insertionS(int[] elements) {
+ 
+    public void printTrace() {
+        System.out.print(arr[0]);
+        if (last == 0)
+            System.out.print("|");
         
+        for (int i = 0; i < arr.length - 1; i++) {
+            System.out.print(arr[i]);
+            if (last == i)
+                System.out.print("|");
+        }
+        System.out.print(arr[arr.length - 1]);
+
+        if (last == arr.length-1)
+            System.out.print("|");
+        
+        System.out.println();
+            
+    }
+
+
+    public void insertionS(int[] arr) {
+        int n = arr.length;
+        last = n;
+        for (int i = 1; i < n-1; i++) {
+            int key = arr[i];
+            int j = i;
+
+            while (j > 0 && arr[j-1] > key) {
+                arr[j] = arr[j-1];
+                j = j - 1;
+            }
+            arr[j] = key;
+
+            if (this.modes == 0) {  //izpisovanje urejanja
+                printTrace();
+            }
+            last = i;
+        }
     }
 
 }

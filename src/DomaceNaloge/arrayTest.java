@@ -12,6 +12,13 @@ public class arrayTest {
         }
 */
         for (int i = 0; i < arrCopy.length; i++) {
+            if (arrCopy[i] == 0)
+                for (int j = 0; j < arrCopy.length - 1; j++) {
+                    arrCopy[j] = arrCopy[j+1];
+                }
+                break;
+        }
+        for (int i = 0; i < arrCopy.length; i++) {
             System.out.println(arrCopy[i]);
             
         }
