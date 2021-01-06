@@ -185,23 +185,22 @@ class Sorting {
         int last = arr.length - 1;
         printOriginal();
         System.out.println();
-        int i = 0;
 
-        while (i < arr.length - 1) {
-        //for (int i = 0; i < arr.length - 1; i = last) {
+        //while (i < arr.length - 1) {
+        for (int i = 0; i < arr.length - 1; i = last) {
             last = arr.length - 1;
             if (direction) {
-                for (int j = arr.length - 2; j >= i; --j) {
-                    if (arr[j] < arr[j + 1]) {
-                        swap(arr[j], arr[j + 1]);
+                for (int j = arr.length - 1; j > i; --j) {
+                    if (arr[j] < arr[j - 1]) {
+                        swap(arr[j], arr[j - 1]);
                         last = j;
                     }
                 }
             }
             else {
-                for (int j = arr.length - 2; j >= i; --j) {
-                    if (arr[j] > arr[j + 1]) {
-                        swap(arr[j], arr[j + 1]);
+                for (int j = arr.length - 1; j > i; --j) {
+                    if (arr[j] > arr[j - 1]) {
+                        swap(arr[j], arr[j - 1]);
                         last = j;
                     }
                 }
@@ -209,8 +208,11 @@ class Sorting {
             if (this.modes == "trace") {
                 printTrace(last);
             }
-            i = last;
         }
+    }
+
+    public void mergeS() {
+        if (arr.length <= 1)
     }
 
     public int partition(int left, int right) {
