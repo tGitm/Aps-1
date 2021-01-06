@@ -1,22 +1,26 @@
 package DomaceNaloge;
 
-public class test {
+public class test2 {
     public static void main(String[] args) {
-        Ttest2 t = new Ttest2();
+        Test3 t = new Test3();
         t.setMode("count");
         System.out.println(t.getMode());
+        int tab[] = {0,1,2,3,4,5,6,7,8,9};
+        t.integer(tab);
+        
         
     }
 }
 
-class Ttest2 {
+
+class Test3 {
     private int mode;
 
-    Ttest2() {
+    Test3() {
         this.mode = mode;
     }
 
-    public Ttest2(int mode) {
+    public Test3(int mode) {
         this.mode = mode;
     }
 
@@ -31,6 +35,13 @@ class Ttest2 {
             this.mode = 1;
     }
 
+    public void integer(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.println(arr[i]);
+        }
+    }
+
 
 
 }
+

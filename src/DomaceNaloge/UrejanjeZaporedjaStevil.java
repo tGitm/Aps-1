@@ -6,7 +6,6 @@ public class UrejanjeZaporedjaStevil {
     public static void main(String[] args) {
         try {
             Scanner sc = new Scanner(System.in);
-            
                         
             //arg[0] - trace/count, arg[1] - sortings, arg[2] - up/dow
             String read = sc.nextLine();
@@ -15,7 +14,7 @@ public class UrejanjeZaporedjaStevil {
             String[] nums = sc.nextLine().split("\\s+"); //številke za sortiranje
             int[] elements = new int[nums.length];
 
-            Sorting sorts = new Sorting(elements);
+            Sorting sorts = new Sorting(instructions[0], elements);
                 
             
             for (int i = 0; i < nums.length; i++) {
@@ -25,17 +24,17 @@ public class UrejanjeZaporedjaStevil {
             sorts.setDirection(instructions[2]);
 
             switch(instructions[1]) {
-                case "insert": sorts.insertionS(elements);
+                case "insert": sorts.insertionS();
                 break;
-                case "select": 
+                case "select": sorts.selectionS();
                 break;
-                case "bubble":       
+                case "bubble": sorts.bubbleS();      
                 break;
                 case "heap": 
                 break;
                 case "merge": 
                 break;
-                case "quick": 
+                case "quick": //sorts.quickS();
                 break;
                 case "radix": 
                 break;
@@ -48,101 +47,218 @@ public class UrejanjeZaporedjaStevil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
     }
-
 }
 
 class Sorting {
-    private int modes;
-    private int[] arr;
-    private int moves;
-    private int last;
-    private int compare;
-    private int direction; //1 - up, 0 - down
+    private String modes;
+    private boolean direction; //true - up, false - down
+    int[] arr;
+    int moves;
+    int compares;
 
-
-    Sorting(int[] elements) {   //konstruktorju dodam tabelo elementov
+    Sorting(String mode, int[] elements) {   //konstruktorju dodelim tabelo elementov
         this.arr = elements;
-        this.modes = modes;
+        this.modes = mode;
     }
 
-    public void resizeMyArray(int array[]) {
-        int[] array1 = new int[this.arr.length*2];    //povečam * 2 org velikosti
-
-        for (int i = 0; i < array.length; i++) {
-            array1[i] = array[i];
-        }
-
-        //grem čez arrayResized, da odstranim vse 0 na koncu
-        for (int i = 0; i < array1.length; i++) {
-            if (array1[i] == 0)
-                for (int j = 0; j < array1.length - 1; j++) {
-                    array1[j] = array1[j+1];
-                }
-                break;
-        }
-    }
-
-    public int getModes() { return this.modes; }
+    public String getModes() { return this.modes; }
 
     public void setMode(String modes) {
         if (modes.equals("trace"))
-            this.modes = 0;
+            this.modes = "trace";
         else
-            this.modes = 1;
+            this.modes = "count";
     }
 
     
-    public int getDirection() { return this.direction; }
+    public boolean getDirection() { return this.direction; }
 
     public void setDirection(String instruction) {
         if (instruction.equals("up")) 
-            this.direction = 1;
+            this.direction = true;
         else if (instruction.equals("down"))
-            this.direction = 0;
+            this.direction = false;
 
         //return this.direction;
     }
+
+    public void printOriginal() {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + " ");
+        }
+    }
  
-    public void printTrace() {
-        System.out.print(arr[0]);
-        if (last == 0)
-            System.out.print("|");
-        
-        for (int i = 0; i < arr.length - 1; i++) {
-            System.out.print(arr[i]);
-            if (last == i)
-                System.out.print("|");
-        }
-        System.out.print(arr[arr.length - 1]);
+    public void printTrace(int change) {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + " ");
 
-        if (last == arr.length-1)
-            System.out.print("|");
-        
-        System.out.println();
+            if (change == i) System.out.print("| ");
             
+        }
+        System.out.println();
+    }
+
+    private void swap(int a, int b) {
+        int tmp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = tmp;
+        this.moves += 3;        //za swap prištejem 3 premike
     }
 
 
-    public void insertionS(int[] arr) {
+    public void insertionS() {
         int n = arr.length;
-        last = n;
-        for (int i = 1; i < n-1; i++) {
-            int key = arr[i];
-            int j = i;
+        int change = 1;
+        printOriginal();
+        System.out.println();
+        
+        if (direction) {
+            for (int i = 1; i <= n-1; i++) {
+                int key = arr[i];
+                int j = i;
 
-            while (j > 0 && arr[j-1] > key) {
-                arr[j] = arr[j-1];
-                j = j - 1;
-            }
-            arr[j] = key;
+                while (j > 0 && arr[j-1] > key) {
+                    arr[j] = arr[j-1];
+                    ++this.moves;   //povečam premik za 1
+                    j = j - 1;
+                }
+                arr[j] = key;
 
-            if (this.modes == 0) {  //izpisovanje urejanja
-                printTrace();
+                if (this.modes == "trace") {  //izpisovanje urejanja
+                    printTrace(change);
+                }
+                change++;
             }
-            last = i;
+        }
+        else {
+            for (int i = 1; i <= n-1; i++) {
+                int key = arr[i];
+                int j = i;
+
+                while (j > 0 && arr[j-1] < key) {
+                    arr[j] = arr[j-1];
+                    ++this.moves;   //povečam premik za 1
+                    j = j - 1;
+                }
+                arr[j] = key;
+
+                if (this.modes == "trace") {  //izpisovanje urejanja
+                    printTrace(change);
+                }
+                change++;
+            }
         }
     }
 
+    public void selectionS() {
+        int change = 0;
+        printOriginal();    //izpišem vhodno tabelo števil
+
+        System.out.println();
+
+        for (int i = 0; i <= arr.length - 2; i++) {
+            int m = i;
+            for (int j = i + 1; j <= arr.length-1; j++) {
+                if (direction) {
+                    if (arr[j] < arr[m]) {
+                        m = j;
+                        ++this.moves;
+                    }
+                }
+                else {
+                    if (arr[j] > arr[m]) {
+                        m = j;
+                        ++this.moves;
+                    }
+                }
+            }
+            swap(i, m);
+            if (this.modes == "trace") {  //izpisovanje urejanja
+                printTrace(change);
+            }
+            change++;
+        }
+    }
+
+    public void bubbleS() {
+        int last = arr.length - 1;
+        printOriginal();
+        System.out.println();
+        int i = 0;
+
+        while (i < arr.length - 1) {
+        //for (int i = 0; i < arr.length - 1; i = last) {
+            last = arr.length - 1;
+            if (direction) {
+                for (int j = arr.length - 2; j >= i; --j) {
+                    if (arr[j] < arr[j + 1]) {
+                        swap(arr[j], arr[j + 1]);
+                        last = j;
+                    }
+                }
+            }
+            else {
+                for (int j = arr.length - 2; j >= i; --j) {
+                    if (arr[j] > arr[j + 1]) {
+                        swap(arr[j], arr[j + 1]);
+                        last = j;
+                    }
+                }
+            }
+            if (this.modes == "trace") {
+                printTrace(last);
+            }
+            i = last;
+        }
+    }
+
+    public int partition(int left, int right) {
+        int p = arr[left];
+        int l = left;
+        int r = right + 1;
+
+        if (direction) {
+            while (true) {
+                do {
+                    l++;
+                } while ( arr[l] < p && l < right);
+
+                do {
+                    r--;
+                } while (arr[r] > p);
+
+                if (l >= r) break;
+            }
+            swap(l, r);       
+        } else {
+            while (true) {
+                do {
+                    l++;
+                } while ( arr[l] > p && l < right);
+
+                do {
+                    r--;
+                } while (arr[r] < p);
+
+                if (l >= r) break;
+            }
+            swap(l, r); 
+        }
+
+        swap(left, r);
+        return r;
+    }
+
+    public void quickS(int left, int right) {
+        if (left > right) {
+            int r = partition(left, right);
+
+            quickS(left, r - 1);
+            quickS(r + 1, right);
+            if (this.modes == "trace") {  //izpisovanje urejanja
+                //printTrace();
+            }
+        }
+    }
 }
