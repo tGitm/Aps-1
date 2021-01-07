@@ -1,7 +1,8 @@
 package DomaceNaloge;
+
 import java.util.Scanner;
 
-public class UrejanjeZaporedjaStevil {
+public class BackupDN2 {
     public static void main(String[] args) {
         try {
             Scanner sc = new Scanner(System.in);
@@ -148,6 +149,8 @@ class Sorting {
 
                 if (this.modes == "trace") {  //izpisovanje urejanja
                     printTrace(change);
+                } else {
+                    count();
                 }
                 change++;
             }
@@ -156,9 +159,7 @@ class Sorting {
 
     public int[] selectionS(int[] arr) {
         int change = 0;
-        if (this.modes == "trace") {
-            printOriginal();    //izpišem vhodno tabelo števil
-        }
+        printOriginal();    //izpišem vhodno tabelo števil
 
         System.out.println();
 
@@ -180,12 +181,10 @@ class Sorting {
             swap(i, m);
             if (this.modes == "trace") {  //izpisovanje urejanja
                 printTrace(change);
+            } else {
+                count();
             }
             change++;
-        }
-
-        if (this.modes == "count") {
-            count();
         }
         return arr;
     }
@@ -216,6 +215,7 @@ class Sorting {
             System.out.print(this.moves + " " + this.compares );
             this.moves = 0;     //ponovno resetiram counterja na 0
             this.compares = 0;
+        
     }
 
     public void bubbleS() {
