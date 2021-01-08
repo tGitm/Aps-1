@@ -24,9 +24,11 @@ public class UrejanjeZaporedjaStevil {
             sorts.setDirection(instructions[2]);
 
             switch(instructions[1]) {
-                case "insert": sorts.insertionS(elements);
+                case "insert": 
                     if (instructions[0].equals("count")) {
                         sorts.countI(elements);
+                    } else {
+                        sorts.insertionS(elements);
                     }
                 break;
                 case "select": sorts.selectionS(elements);
@@ -34,14 +36,18 @@ public class UrejanjeZaporedjaStevil {
                         sorts.countS(elements);
                     }
                 break;
-                case "bubble": sorts.bubbleS(elements);     
+                case "bubble":      
                     if (instructions[0].equals("count")) {
                         sorts.countB(elements);
+                    } else {
+                        sorts.bubbleS(elements);
                     }
                 break;
-                case "heap": sorts.heapS(elements);
+                case "heap": 
                     if (instructions[0].equals("count")) {
                         sorts.countH(elements);
+                    } else {
+                        sorts.heapS(elements);
                     }
                 break;
                 case "merge": 
@@ -106,12 +112,9 @@ class Sortings {
             System.out.print(arr[i] + " ");
 
             if (change == i) System.out.print("| ");
-            
         }
         System.out.println();
     }
-
-    
 
     private void swap(int[] el, int a, int b) {
         int tmp = el[a];
@@ -119,7 +122,6 @@ class Sortings {
         el[b] = tmp;
         this.moves += 3;        //za swap prištejem 3 premike
     }
-
 
     public int[] insertionS(int[] el) {
         int n = el.length;
@@ -129,17 +131,22 @@ class Sortings {
             System.out.println();
         }
 
-        if (direction) {
-            for (int i = 1; i <= n-1; i++) {
-                int key = el[i];
-                this.moves++;
-                int j = i;
-
-                while (j > 0 && el[j-1] > key) {
+        for (int i = 1; i <= n-1; i++) {
+            int key = el[i];
+            int j = i;
+            this.moves++;
+            
+            if (direction) {       
+                while (j > 0) {
                     this.compares++;
-                    el[j] = el[j-1];
-                    this.moves++;   //povečam premik za 1
-                    j = j - 1;
+                    if (el[j-1] > key) {
+                        el[j] = el[j-1];
+                        this.moves++;   //povečam premik za 1
+                        j = j - 1;
+                    }
+                    else {
+                        break;
+                    }
                 }
                 el[j] = key;
                 this.moves++;
@@ -149,18 +156,17 @@ class Sortings {
                 }
                 change++;
             }
-        }
-        else {
-            for (int i = 1; i <= n-1; i++) {
-                int key = el[i];
-                this.moves++; 
-                int j = i;
-                
-                while (j > 0 && el[j-1] < key) {
+            else {
+                while (j > 0) {  
                     this.compares++;
-                    el[j] = el[j-1];
-                    this.moves++;   //povečam premik za 1
-                    j = j - 1;
+                    if (el[j-1] < key) {
+                        el[j] = el[j-1];
+                        this.moves++;   //povečam premik za 1
+                        j = j - 1;
+                    }
+                    else {
+                        break;
+                    }
                 }
                 el[j] = key;
                 this.moves++; 
@@ -265,7 +271,7 @@ class Sortings {
     }
 
     public int[] bubbleS(int[] el) {
-        int last;
+        int last = el.length - 1;
         if (this.modes == "trace") {
             printOriginal();
             System.out.println();
@@ -286,8 +292,7 @@ class Sortings {
             else {
                 for (int j = el.length - 1; j > i; --j) {
                     this.compares++;
-                    if (el[j - 1] < el[j]) {
-                        
+                    if (el[j - 1] < el[j]) {   
                         swap(el, j - 1, j);
                         last = j;
                     }
