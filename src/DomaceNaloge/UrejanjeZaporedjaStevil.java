@@ -40,6 +40,9 @@ public class UrejanjeZaporedjaStevil {
                     }
                 break;
                 case "heap": sorts.heapS(elements);
+                    if (instructions[0].equals("count")) {
+                        sorts.countH(elements);
+                    }
                 break;
                 case "merge": 
                 break;
@@ -272,20 +275,19 @@ class Sortings {
         for (int i = 0; i < el.length - 1; i = last) {
             last = el.length - 1;
             if (direction) {
-                for (int j = el.length - 1; j > i; j--) {
-                    
+                for (int j = el.length - 1; j > i; --j) {
+                    this.compares++;
                     if (el[j - 1] > el[j]) {
-                        this.compares++;
                         swap(el, j - 1, j);
                         last = j;
                     }
                 }
             }
             else {
-                for (int j = el.length - 1; j > i;j--) {
-                    
+                for (int j = el.length - 1; j > i; --j) {
+                    this.compares++;
                     if (el[j - 1] < el[j]) {
-                        this.compares++;
+                        
                         swap(el, j - 1, j);
                         last = j;
                     }
@@ -332,9 +334,8 @@ class Sortings {
             printOriginal();
             System.out.println();
         }
-
         for (int i = el.length / 2 - 1; i >= 0; --i) {
-            //siftDown(i, el.length - 1);
+            siftDown(i, el.length - 1);
         }
 
         int last = el.length - 1;
@@ -343,12 +344,77 @@ class Sortings {
                 printTrace(last);
             }
             swap(el, 0, last);
-            //siftDown(0, last--)
+            siftDown(0, --last);
         }
         if (this.modes == "trace") {
             printTrace(last);
         }
         return el;
+    }
+
+    public void siftDown(int p, int last) {
+        int c = 2 * p + 1;
+        while (c <= last ) {
+            if (this.direction) {   //če je smer urejanja up
+                if (c < last && arr[c + 1] > arr[c]) {
+                    this.compares++;
+                    c += 1;
+                }
+                this.compares++;
+                if (arr[p] >= arr[c]) {
+                    break;
+                }
+                else {
+                    swap(arr, p, c);
+                    p = c;
+                    c = 2 * p + 1;
+                }
+            }
+            else {      //če je smer urejanja down
+                if (c < last && arr[c + 1] < arr[c]) {
+                    this.compares++;
+                    c += 1;
+                }
+                this.compares++;
+                if (arr[p] <= arr[c]) {
+                    break;
+                }
+                else {
+                    swap(arr, p, c);
+                    p = c;
+                    c = 2 * p + 1;
+                }
+            }
+        }
+    }
+
+    public void countH(int[] el) {
+        int[] count1 = heapS(el); //uredim
+        System.out.print(this.moves + " " + this.compares + " | ");
+        this.moves = 0;     //oba counterja resetiram in grem štet na novo, čez že urejeno tabelo
+        this.compares = 0;
+        
+        //nato gremo izvajat 2. tokrat to izvajamo nad urejenim zaporedjem
+        int[] count2 = heapS(count1);
+        System.out.print(this.moves + " " + this.compares + " | ");
+        this.moves = 0;     //ponovno resetiram counterja na 0
+        this.compares = 0;
+
+        //3tja izvedba je ko imamo urejeno polje, ga uredimo v obratni smeri (obrnemo tabelo!!), če je bila smer naraščujoča je zdej padajoča oziroma obratno
+        //enako preštejemo št premikov in primerjav
+        int[] tableAround = new int[count2.length];
+        int j = count2.length;
+        for (int i = 0; i < count2.length; i++) {
+            tableAround[j - 1] = count2[i];
+            j = j - 1;
+        }
+
+        //uredimo obrnjeno tabelo
+        int[] count3 = heapS(tableAround);
+        System.out.print(this.moves + " " + this.compares );
+        this.moves = 0;     //ponovno resetiram counterja na 0
+        this.compares = 0;
+    
     }
 
     public int partition(int left, int right) {
