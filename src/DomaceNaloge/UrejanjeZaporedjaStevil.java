@@ -51,6 +51,11 @@ public class UrejanjeZaporedjaStevil {
                     }
                 break;
                 case "merge": 
+                    if (instructions[0].equals("trace")) {
+                        sorts.printOriginal(elements);
+                        System.out.println();
+                        sorts.mergeS(elements, 0, elements.length - 1);
+                    }
                 break;
                 case "quick": //sorts.quickS();
                 break;
@@ -101,9 +106,9 @@ class Sortings {
         //return this.direction;
     }
 
-    public void printOriginal() {
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i] + " ");
+    public void printOriginal(int[] el) {
+        for (int i = 0; i < el.length; i++) {
+            System.out.print(el[i] + " ");
         }
     }
  
@@ -127,7 +132,7 @@ class Sortings {
         int n = el.length;
         int change = 1;
         if (this.modes == "trace") {
-            printOriginal();
+            printOriginal(el);
             System.out.println();
         }
 
@@ -212,7 +217,7 @@ class Sortings {
     public int[] selectionS(int[] el) {
         int change = 0;
         if (this.modes == "trace") {
-            printOriginal();    //izpišem vhodno tabelo števil
+            printOriginal(el);    //izpišem vhodno tabelo števil
             
             System.out.println();
         }
@@ -273,7 +278,7 @@ class Sortings {
     public int[] bubbleS(int[] el) {
         int last = el.length - 1;
         if (this.modes == "trace") {
-            printOriginal();
+            printOriginal(el);
             System.out.println();
         }
 
@@ -336,7 +341,7 @@ class Sortings {
 
     public int[] heapS(int[] el) {
         if (this.modes == "trace") {
-            printOriginal();
+            printOriginal(el);
             System.out.println();
         }
         for (int i = el.length / 2 - 1; i >= 0; --i) {
@@ -361,9 +366,12 @@ class Sortings {
         int c = 2 * p + 1;
         while (c <= last ) {
             if (this.direction) {   //če je smer urejanja up
-                if (c < last && arr[c + 1] > arr[c]) {
+                if (c < last) {
                     this.compares++;
-                    c += 1;
+                    if (arr[c + 1] > arr[c]) {
+                        c += 1;
+                
+                    }
                 }
                 this.compares++;
                 if (arr[p] >= arr[c]) {
@@ -376,9 +384,11 @@ class Sortings {
                 }
             }
             else {      //če je smer urejanja down
-                if (c < last && arr[c + 1] < arr[c]) {
+                if (c < last) { 
                     this.compares++;
-                    c += 1;
+                    if (arr[c + 1] < arr[c]) {
+                        c += 1;
+                    }
                 }
                 this.compares++;
                 if (arr[p] <= arr[c]) {
@@ -421,6 +431,91 @@ class Sortings {
         this.compares = 0;
     
     }
+
+    public int[] mergeS(int[] el, int l, int r) {
+        int middle;
+
+        if (l < r) {
+            // sredina
+            middle = (l + r) / 2;
+ 
+            // sortiraj prvo in drugo polovico
+            int[] prva = mergeS(el, l, middle);
+            int[] druga = mergeS(el, middle + 1, r);
+ 
+            // mergam urejeni polovici
+            merge(el, l, middle, r);
+            if (this.modes == "trace") {
+              for (int i = 0; i < prva.length; i++) {
+                      System.out.print(prva[i]);
+              }
+              System.out.println(" | ");
+              for (int i = 0; i < druga.length; i++) {
+                System.out.print(druga[i]);
+        }
+            }
+        }
+        return el;
+    }
+
+    public void merge(int[] el, int l, int middle, int r) {
+        int size1 = middle - l + 1;
+        int size2 = r - middle;
+       
+        int temp1[] = new int[size1];
+        int temp2[] = new int[size2];
+ 
+        for (int i = 0; i < size1; ++i)
+            temp1[i] = el[l + i];
+        for (int j = 0; j < size2; ++j)
+            temp2[j] = el[middle + 1 + j];
+        
+        mergeTables(el, l, temp1, temp2, size1, size2);
+        
+    }
+
+    public void mergeTables(int[] el, int l, int[] temp1, int[] temp2, int size1, int size2) {
+        int i = 0, j = 0;
+        
+        int k = l;
+        while (i < size1 && j < size2) {
+            if (this.direction) {
+                if (temp1[i] <= temp2[j]) {
+                    el[k] = temp1[i];
+                    i++;
+                }
+                else {
+                    el[k] = temp2[j];
+                    j++;
+                }
+                k++;
+            } else {
+                if (temp1[i] >= temp2[j]) {
+                    el[k] = temp1[i];
+                    i++;
+                }
+                else {
+                    el[k] = temp2[j];
+                    j++;
+                }
+                k++;
+            }
+            
+        }
+
+        while (i < size1) {
+            el[k] = temp1[i];
+            i++;
+            k++;
+        }
+
+        while (j < size2) {
+            el[k] = temp2[j];
+            j++;
+            k++;
+        }
+    }
+
 
     public int partition(int left, int right) {
         int p = arr[left];
