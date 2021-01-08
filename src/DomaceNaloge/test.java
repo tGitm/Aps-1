@@ -30,7 +30,4 @@ class Ttest2 {
         else
             this.mode = 1;
     }
-
-
-
 }

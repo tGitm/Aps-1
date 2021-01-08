@@ -1,6 +1,9 @@
 package DomaceNaloge;
 
+import java.util.IntSummaryStatistics;
 import java.util.Scanner;
+
+import javax.lang.model.element.Element;
 
 public class BackupDN2 {
     public static void main(String[] args) {
@@ -24,9 +27,12 @@ public class BackupDN2 {
             sorts.setDirection(instructions[2]);
 
             switch(instructions[1]) {
-                case "insert": sorts.insertionS();
+                case "insert": sorts.insertionS(elements);
                 break;
                 case "select": sorts.selectionS(elements);
+                    if (instructions[0].equals("count")) {
+                        sorts.countS(elements);
+                    }
                 break;
                 case "bubble": sorts.bubbleS();      
                 break;
@@ -101,32 +107,36 @@ class Sorting {
 
     
 
-    private void swap(int a, int b) {
-        int tmp = arr[a];
-        arr[a] = arr[b];
-        arr[b] = tmp;
+    private void swap(int[] el, int a, int b) {
+        int tmp = el[a];
+        el[a] = el[b];
+        el[b] = tmp;
         this.moves += 3;        //za swap prištejem 3 premike
     }
 
 
-    public void insertionS() {
-        int n = arr.length;
+    public int[] insertionS(int[] el) {
+        int n = el.length;
         int change = 1;
-        printOriginal();
-        System.out.println();
+        if (this.modes == "trace") {
+            printOriginal();
+            System.out.println();
+        }
+
+        
         
         if (direction) {
             for (int i = 1; i <= n-1; i++) {
-                int key = arr[i];
+                int key = el[i];
                 int j = i;
 
-                while (j > 0 && arr[j-1] > key) {
+                while (j > 0 && el[j-1] > key) {
                     ++this.compares;
-                    arr[j] = arr[j-1];
+                    el[j] = el[j-1];
                     ++this.moves;   //povečam premik za 1
                     j = j - 1;
                 }
-                arr[j] = key;
+                el[j] = key;
 
                 if (this.modes == "trace") {  //izpisovanje urejanja
                     printTrace(change);
@@ -136,62 +146,61 @@ class Sorting {
         }
         else {
             for (int i = 1; i <= n-1; i++) {
-                int key = arr[i];
+                int key = el[i];
                 int j = i;
 
-                while (j > 0 && arr[j-1] < key) {
+                while (j > 0 && el[j-1] < key) {
                     ++this.compares;
-                    arr[j] = arr[j-1];
+                    el[j] = el[j-1];
                     ++this.moves;   //povečam premik za 1
                     j = j - 1;
                 }
-                arr[j] = key;
+                el[j] = key;
 
                 if (this.modes == "trace") {  //izpisovanje urejanja
                     printTrace(change);
-                } else {
-                    count();
                 }
                 change++;
             }
         }
+        return el;
     }
 
-    public int[] selectionS(int[] arr) {
+    public int[] selectionS(int[] el) {
         int change = 0;
-        printOriginal();    //izpišem vhodno tabelo števil
+        if (this.modes == "trace") {
+            printOriginal();    //izpišem vhodno tabelo števil
+            
+            System.out.println();
+        }
 
-        System.out.println();
-
-        for (int i = 0; i <= arr.length - 2; i++) {
+        for (int i = 0; i <= el.length - 2; i++) {
             int m = i;
-            for (int j = i + 1; j <= arr.length-1; j++) {
+            for (int j = i + 1; j <= el.length-1; j++) {
                 this.compares++;
                 if (direction) {
-                    if (arr[j] < arr[m]) {
+                    if (el[j] < el[m]) {
                         m = j;
                     }
                 }
                 else {
-                    if (arr[j] > arr[m]) {
+                    if (el[j] > el[m]) {
                         m = j;
                     }
                 }
             }
-            swap(i, m);
+            swap(el, i, m);
             if (this.modes == "trace") {  //izpisovanje urejanja
                 printTrace(change);
-            } else {
-                count();
             }
             change++;
         }
-        return arr;
+        return el;
     }
 
-    public void count() {
-            int[] count1 = selectionS(arr); //uredim
-            System.out.print(this.moves + " " + this.compares + " | ");
+    public void countS(int[] el) {
+            int[] count1 = selectionS(el); //uredim
+            System.out.print(this.moves/2 + " " + this.compares/2 + " | ");
             this.moves = 0;     //oba counterja resetiram in grem štet na novo, čez že urejeno tabelo
             this.compares = 0;
             
@@ -230,7 +239,7 @@ class Sorting {
                 for (int j = arr.length - 1; j > i; j--) {
                     this.compares++;
                     if (arr[j - 1] > arr[j]) {
-                        swap(j - 1, j);
+                        swap(arr, j - 1, j);
                         last = j;
                     }
                 }
@@ -239,7 +248,7 @@ class Sorting {
                 for (int j = arr.length - 1; j > i;j--) {
                     this.compares++;
                     if (arr[j - 1] < arr[j]) {
-                        swap(j - 1, j);
+                        swap(arr, j - 1, j);
                         last = j;
                     }
                 }
@@ -249,6 +258,8 @@ class Sorting {
             }
         }
     }
+
+    
 
     public void mergeS() {
         if (arr.length <= 1);
@@ -271,7 +282,7 @@ class Sorting {
 
                 if (l >= r) break;
             }
-            swap(l, r);       
+            swap(arr, l, r);       
         } else {
             while (true) {
                 do {
@@ -284,10 +295,10 @@ class Sorting {
 
                 if (l >= r) break;
             }
-            swap(l, r); 
+            swap(arr, l, r); 
         }
 
-        swap(left, r);
+        swap(arr, left, r);
         return r;
     }
 
