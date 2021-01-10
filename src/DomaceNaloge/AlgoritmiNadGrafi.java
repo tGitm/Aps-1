@@ -195,7 +195,7 @@ public class AlgoritmiNadGrafi {
 
     class TestArray {
 
-        public int array[][];
+        public int array[][];   
         public int stevec;
         public int vel;
 

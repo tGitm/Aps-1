@@ -446,12 +446,7 @@ class Sortings {
             // mergam urejeni polovici
             merge(el, l, middle, r);
             if (this.modes == "trace") {
-              for (int i = 0; i < prva.length; i++) {
-                      System.out.print(prva[i]);
-              }
-              System.out.println(" | ");
-              for (int i = 0; i < druga.length; i++) {
-                System.out.print(druga[i]);
+              
         }
             }
         }
