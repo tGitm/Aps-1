@@ -34,7 +34,6 @@ public class izziv3 {
         if (r < l){
             return -1;
         }
-
         int mediana = l + (r - l) / 2;
         if (v < a[mediana]) {
             return findBinary(a, l, mediana - 1, v);
@@ -43,7 +42,6 @@ public class izziv3 {
         if (v > a[mediana]) {
             return findBinary(a,mediana + 1, r, v);
         }
-
         return mediana;
     }
 
