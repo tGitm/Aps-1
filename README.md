@@ -1,5 +1,4 @@
-# Aps-1
-Faculty subject Algorithms and Data Structures 1.
+# Algorithms and Data structures in Java
 
 Content (Syllabus outline)
 Basics of algorithms
